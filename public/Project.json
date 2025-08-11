@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "projectName": "Fitness Web App",
+    "projectImage": "https://i.ibb.co.com/d0Swdrv9/Screenshot-2025.png",
+    "detailsPage": {
+      "mainTechStack": ["React", "Node.js", "MongoDB", "Tailwind CSS", "Firebase Auth", "Stripe"],
+      "briefDescription": "A fully-featured fitness platform connecting trainers and clients with booking, payment, and personalized workout tracking.",
+      "liveProjectLink": "https://merry-alpaca-9662eb.netlify.app/",
+      "githubRepoClient": "https://github.com/Programming-Hero-Web-Course4/b11a11-client-side-jamimaafroz",
+      "challengesFaced": "Implementing real-time booking slots, secure payment integration, and role-based access control.",
+      "potentialImprovements": "Add AI-driven personalized workout plans and nutrition tracking."
+    }
+  },
+  {
+    "id": 2,
+    "projectName": "Blogging Web App",
+    "projectImage": "https://i.ibb.co/cK13JdFR/Screenshot-2025-08-08-003504.png",
+    "detailsPage": {
+      "mainTechStack": ["React", "Express", "MongoDB", "JWT Auth", "Tailwind CSS"],
+      "briefDescription": "A responsive blogging platform supporting user posts, comments, wishlists, and admin moderation.",
+      "liveProjectLink": "https://jazzy-kangaroo-66202e.netlify.app/",
+      "githubRepoClient": "https://github.com/jamimaafroz/Blogs-Site-client",
+      "challengesFaced": "Handling complex state for wishlists, ensuring secure authentication, and building admin dashboard features.",
+      "potentialImprovements": "Add markdown editor and content recommendation system."
+    }
+  },
+  {
+    "id": 3,
+    "projectName": "Freelancer Web App",
+    "projectImage": "https://i.ibb.co.com/dwsDSMgq/Screenshot-2025-08-12-035644.png",
+    "detailsPage": {
+      "mainTechStack": ["React", "Node.js", "MongoDB", "Firebase Auth", "Stripe"],
+      "briefDescription": "A platform for freelancers to showcase services, manage projects, and handle client payments seamlessly.",
+      "liveProjectLink": "https://silver-daifuku-57a35a.netlify.app/",
+      "githubRepoClient": "https://github.com/Programming-Hero-Web-Course4/b11a10-client-side-jamimaafroz",
+      "challengesFaced": "Building secure payment workflows, managing user roles, and integrating project management features.",
+      "potentialImprovements": "Introduce AI-powered matching between clients and freelancers."
+    }
+  }
+]
