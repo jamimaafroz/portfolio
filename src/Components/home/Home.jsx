@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router";
 import DesignationIntro from "./DesignationIntro";
-import AboutMe from "./AboutMe";
+// import AboutMe from "./AboutMe";
 import Skills from "./Skills";
 import ResumeButton from "./ResumeButton";
 import Education from "./Education";
@@ -26,9 +26,9 @@ const Home = () => {
 
   return (
     <div>
-      <DesignationIntro />
+      {/* <DesignationIntro /> */}
       <div id="about">
-        <AboutMe />
+              <DesignationIntro />
       </div>
       <div id="skills">
         <Skills />

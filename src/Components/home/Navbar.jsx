@@ -1,259 +1,157 @@
-import React, { useState } from "react";
-import { Link as RouterLink, useLocation, useNavigate } from "react-router";
-import { FaBars, FaTimes } from "react-icons/fa";
-
-const colors = {
-  cream: "#E8D6CB",
-  softRose: "#D0ADA7",
-  dustyRed: "#AD6A6C",
-  deepPlum: "#5D2E46",
-  lavender: "#B58DB6",
-};
+import React, { useEffect, useState } from "react";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+import { FaBars, FaTimes, FaDownload } from "react-icons/fa";
 
 const Navbar = () => {
   const [navOpen, setNavOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === "/";
 
   const navLinks = [
-    { name: "About", id: "about", type: "scroll" },
-    { name: "Projects", id: "project-section", type: "scroll" },
-    { name: "Skills", id: "skills", type: "scroll" },
-    { name: "Socials", id: "social", type: "scroll" },
-    { name: "Contact", id: "contact", type: "scroll" },
+    { name: "Projects", id: "project-section" },
+    { name: "Skills", id: "skills" },
+    { name: "About", id: "about" },
+    { name: "Contact", id: "contact" },
   ];
 
-  const handleScrollOrNavigate = (id, type) => {
-    setNavOpen(false);
-    if (type === "scroll") {
-      if (isHome) {
-        const element = document.getElementById(id);
-        if (element)
-          element.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else {
-        navigate("/", { state: { scrollTo: id } });
-      }
-    } else if (type === "route") {
-      navigate(id);
-    }
-  };
+  // Scroll effect
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  // Helper for inline underline style for active nav items
-  const underlineStyle = {
-    content: "''",
-    position: "absolute",
-    bottom: "-8px",
-    left: 0,
-    width: "100%",
-    height: "3px",
-    backgroundColor: colors.dustyRed,
-    borderRadius: "2px",
+  // Lock body scroll on mobile menu
+  useEffect(() => {
+    document.body.style.overflow = navOpen ? "hidden" : "auto";
+  }, [navOpen]);
+
+  // Active section observer
+  useEffect(() => {
+    if (!isHome) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+
+    navLinks.forEach(({ id }) => {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    });
+
+    return () => observer.disconnect();
+  }, [isHome]);
+
+  const handleNavigate = (id) => {
+    setNavOpen(false);
+    if (isHome) {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/", { state: { scrollTo: id } });
+    }
   };
 
   return (
     <nav
-      className="fixed w-full z-50 shadow-md transition-colors duration-500"
-      style={{ backgroundColor: colors.cream }}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? "py-3 backdrop-blur-md bg-slate-900/90 border-b bg-slate-900/90 shadow-xl"
+          : "py-5 bg-slate-950/60"
+      }`}
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-        <RouterLink
-          to="/"
-          onClick={() => setNavOpen(false)}
-          className="flex items-center"
-        >
-          <h1
-            className="text-3xl font-bold cursor-pointer transition-colors duration-500"
-            style={{
-              fontFamily: "'Mozilla Headline', sans-serif",
-              color: colors.deepPlum,
-            }}
-          >
+      <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
+        {/* Logo */}
+        <RouterLink to="/" className="group">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-100">
+            <span className="text-emerald-400">&lt;</span>
             Usha
-            <span
-              style={{
-                color: colors.dustyRed,
-                fontFamily: "'Urbanist', sans-serif",
-              }}
-              className="ml-1"
-            >
-              Dev
+            <span className="text-emerald-400 group-hover:translate-x-1 inline-block transition-transform">
+              /&gt;
             </span>
           </h1>
         </RouterLink>
 
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex space-x-10 relative">
-          <li style={{ position: "relative" }}>
-            <RouterLink
-              to="/"
-              onClick={() => setNavOpen(false)}
-              style={{
-                fontWeight: "600",
-                cursor: "pointer",
-                color: isHome ? colors.dustyRed : colors.deepPlum,
-                position: "relative",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = colors.dustyRed)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = isHome
-                  ? colors.dustyRed
-                  : colors.deepPlum)
-              }
-            >
-              Home
-              {isHome && <span style={underlineStyle} />}
-            </RouterLink>
-          </li>
+        {/* Desktop Nav */}
+        <ul className="hidden md:flex items-center gap-8">
+          {navLinks.map(({ name, id }) => (
+            <li key={id}>
+              <button
+                onClick={() => handleNavigate(id)}
+                className={`relative text-sm font-medium tracking-wide transition-colors ${
+                  activeSection === id
+                    ? "text-emerald-400"
+                    : "text-slate-400 hover:text-slate-100"
+                }`}
+              >
+                {name}
+                <span
+                  className={`absolute -bottom-1 left-0 h-[2px] bg-emerald-400 transition-all duration-300 ${
+                    activeSection === id ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+              </button>
+            </li>
+          ))}
 
-          {navLinks.map(({ name, id, to, type }) => {
-            const isActive =
-              (type === "route" && location.pathname === to) ||
-              (type === "scroll" && isHome && location.state?.scrollTo === id);
-
-            return (
-              <li key={id || to} style={{ position: "relative" }}>
-                {type === "scroll" ? (
-                  <button
-                    onClick={() => handleScrollOrNavigate(id, type)}
-                    style={{
-                      fontWeight: "600",
-                      cursor: "pointer",
-                      background: "transparent",
-                      border: "none",
-                      fontFamily: "'Urbanist', sans-serif",
-                      color: isActive ? colors.dustyRed : colors.deepPlum,
-                      position: "relative",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.color = colors.dustyRed)
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.color = isActive
-                        ? colors.dustyRed
-                        : colors.deepPlum)
-                    }
-                  >
-                    {name}
-                    {isActive && <span style={underlineStyle} />}
-                  </button>
-                ) : (
-                  <RouterLink
-                    to={to}
-                    onClick={() => setNavOpen(false)}
-                    style={{
-                      fontWeight: "600",
-                      cursor: "pointer",
-                      fontFamily: "'Urbanist', sans-serif",
-                      color: isActive ? colors.dustyRed : colors.deepPlum,
-                      position: "relative",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.color = colors.dustyRed)
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.color = isActive
-                        ? colors.dustyRed
-                        : colors.deepPlum)
-                    }
-                  >
-                    {name}
-                    {isActive && <span style={underlineStyle} />}
-                  </RouterLink>
-                )}
-              </li>
-            );
-          })}
+          {/* Resume CTA */}
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-5 py-2 rounded-full border border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-slate-900 transition-all duration-300"
+            aria-label="Download Resume"
+          >
+            Resume <FaDownload size={14} />
+          </a>
         </ul>
 
-        {/* Mobile Menu Button */}
-        <div
-          className="md:hidden cursor-pointer transition-colors duration-500"
-          style={{ color: colors.deepPlum }}
+        {/* Mobile Toggle */}
+        <button
+          className="md:hidden text-slate-100"
+          onClick={() => setNavOpen(!navOpen)}
         >
-          {navOpen ? (
-            <FaTimes size={28} onClick={() => setNavOpen(false)} />
-          ) : (
-            <FaBars size={28} onClick={() => setNavOpen(true)} />
-          )}
-        </div>
+          {navOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </button>
       </div>
 
-      {/* Mobile Menu */}
-      {navOpen && (
-        <ul
-          className="md:hidden flex flex-col items-center py-8 space-y-6 shadow-lg transition-colors duration-500"
-          style={{ backgroundColor: colors.cream }}
+     {/* Mobile Menu Dropdown */}
+<div
+  className={`md:hidden absolute top-full left-0 w-full overflow-hidden transition-all duration-500 ${
+    navOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
+  } bg-slate-900 border-b border-slate-800`}
+>
+  <ul className="flex flex-col items-center py-8 gap-6">
+    {navLinks.map(({ name, id }) => (
+      <li key={id}>
+        <button
+          onClick={() => handleNavigate(id)}
+          className="text-lg font-medium text-slate-100 hover:text-emerald-400 transition-colors"
         >
-          <li>
-            <RouterLink
-              to="/"
-              onClick={() => setNavOpen(false)}
-              style={{
-                fontWeight: "600",
-                color: colors.deepPlum,
-                fontFamily: "'Urbanist', sans-serif",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = colors.dustyRed)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = colors.deepPlum)
-              }
-            >
-              Home
-            </RouterLink>
-          </li>
+          {name}
+      </button>
+      </li>
+    ))}
+    <a
+      href="/resume.pdf"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-2 px-6 py-2 rounded-full border border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-slate-900 transition"
+    >
+      Resume
+    </a>
+  </ul>
+</div>
 
-          {navLinks.map(({ name, id, to, type }) =>
-            type === "scroll" ? (
-              <li key={id}>
-                <button
-                  onClick={() => handleScrollOrNavigate(id, type)}
-                  style={{
-                    fontWeight: "600",
-                    color: colors.deepPlum,
-                    fontFamily: "'Urbanist', sans-serif",
-                    background: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = colors.dustyRed)
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = colors.deepPlum)
-                  }
-                >
-                  {name}
-                </button>
-              </li>
-            ) : (
-              <li key={to}>
-                <RouterLink
-                  to={to}
-                  onClick={() => setNavOpen(false)}
-                  style={{
-                    fontWeight: "600",
-                    color: colors.deepPlum,
-                    fontFamily: "'Urbanist', sans-serif",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = colors.dustyRed)
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = colors.deepPlum)
-                  }
-                >
-                  {name}
-                </RouterLink>
-              </li>
-            )
-          )}
-        </ul>
-      )}
     </nav>
   );
 };
