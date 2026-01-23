@@ -2,11 +2,10 @@ import React from "react";
 import { FaGithub, FaLinkedin, FaTwitter, FaFacebook } from "react-icons/fa";
 
 const colors = {
-  cream: "#E8D6CB",
-  softRose: "#D0ADA7",
-  dustyRed: "#AD6A6C",
-  deepPlum: "#5D2E46",
-  lavender: "#B58DB6",
+  bgPrimary: "#0F172A",
+  accent: "#10B981",
+  textMain: "#F8FAFC",
+  textMuted: "#94A3B8",
 };
 
 const SocialLinks = () => {
@@ -18,42 +17,27 @@ const SocialLinks = () => {
   ];
 
   return (
-    <section
-      id="social"
-      className="py-10"
-      style={{ backgroundColor: colors.cream, color: colors.deepPlum }}
-    >
-      <h3
-        className="text-2xl font-bold mb-6 text-center"
-        style={{
-          color: colors.dustyRed,
-          fontFamily: "'Mozilla Headline', sans-serif",
-        }}
-      >
-        Connect with Me
-      </h3>
-      <div className="flex justify-center gap-8">
-        {socials.map((social, index) => (
-          <a
-            key={index}
-            href={social.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-3xl transition-transform duration-300 hover:scale-110"
-            style={{ color: colors.deepPlum }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.color = colors.dustyRed)
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.color = colors.deepPlum)
-            }
-            aria-label={`Link to ${social.url}`}
-          >
-            {social.icon}
-          </a>
-        ))}
-      </div>
-    </section>
+    <div className="flex gap-6 mt-4">
+      {socials.map((social, index) => (
+        <a
+          key={index}
+          href={social.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-2xl transition-all duration-300 hover:scale-110"
+          style={{ color: colors.textMuted }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = colors.accent)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = colors.textMuted)
+          }
+          aria-label={`Social link ${index}`}
+        >
+          {social.icon}
+        </a>
+      ))}
+    </div>
   );
 };
 

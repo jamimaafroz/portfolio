@@ -8,7 +8,6 @@ import Education from "./Education";
 import Experience from "./Experience";
 import ProjectList from "../../Project/ProjectList";
 import Contact from "./Contact";
-import SocialLinks from "./SocialLinks";
 
 const Home = () => {
   const location = useLocation();
@@ -41,9 +40,6 @@ const Home = () => {
       </div>
       <div id="contact">
         <Contact />
-      </div>
-      <div id="social">
-        <SocialLinks />
       </div>
     </div>
   );

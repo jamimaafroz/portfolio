@@ -1,49 +1,83 @@
 import React from "react";
 import { Link } from "react-router";
+import { motion } from "framer-motion";
 
 const colors = {
-  dustyRed: "#AD6A6C",
-  deepPlum: "#5D2E46",
-  cream: "#E8D6CB",
+  bgPrimary: "#0F172A",
+  bgSecondary: "#1E293B",
+  accent: "#10B981",
+  textMain: "#F8FAFC",
+  textMuted: "#94A3B8",
 };
 
 const ProjectCard = ({ project }) => {
-  // console.log can stay for debugging, remove in prod tho
   return (
-    <div
-      className="border rounded-lg shadow-lg p-5 max-w-sm bg-cream transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
-      style={{ borderColor: colors.deepPlum }}
+    <motion.article
+      whileHover={{ y: -6 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="group h-full overflow-hidden rounded-xl border shadow-md"
+      style={{
+        backgroundColor: colors.bgSecondary,
+        borderColor: `${colors.textMuted}20`,
+      }}
     >
-      <img
-        src={project.projectImage}
-        alt={project.projectName}
-        className="w-full h-48 object-cover rounded-md border-2 border-dustyRed"
-        style={{ borderColor: colors.dustyRed }}
-      />
-      <h2
-        className="text-2xl font-bold mt-4"
-        style={{
-          color: colors.deepPlum,
-          fontFamily: "'Mozilla Headline', sans-serif",
-        }}
-      >
-        {project.projectName}
-      </h2>
-      <Link to={`/projects/${project.id}`}>
-        <button
-          className="mt-5 px-5 py-2 rounded-md text-white font-semibold transition-colors duration-300"
-          style={{ backgroundColor: colors.dustyRed }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = colors.deepPlum)
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = colors.dustyRed)
-          }
+      {/* Image */}
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={project.projectImage}
+          alt={project.projectName}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col p-6 h-full">
+        <h3
+          className="text-xl font-semibold mb-2"
+          style={{ color: colors.textMain }}
         >
-          View More / Details
-        </button>
-      </Link>
-    </div>
+          {project.projectName}
+        </h3>
+
+        <p
+          className="text-sm leading-relaxed mb-4 line-clamp-3"
+          style={{ color: colors.textMuted }}
+        >
+          {project.description}
+        </p>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {project.tags?.map((tag, index) => (
+            <span
+              key={index}
+              className="text-xs px-3 py-1 rounded-full border font-medium"
+              style={{
+                color: colors.accent,
+                borderColor: `${colors.accent}40`,
+                backgroundColor: `${colors.accent}12`,
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <Link to={`/projects/${project.id}`} className="mt-auto">
+          <button
+            className="w-full py-2.5 rounded-lg font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
+            style={{
+              backgroundColor: colors.accent,
+              color: colors.bgPrimary,
+            }}
+          >
+            View Details →
+          </button>
+        </Link>
+      </div>
+    </motion.article>
   );
 };
 

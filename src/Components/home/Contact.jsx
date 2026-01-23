@@ -1,113 +1,148 @@
 import React from "react";
 import { FaPhoneAlt, FaEnvelope, FaWhatsapp } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const colors = {
-  cream: "#E8D6CB",
-  softRose: "#D0ADA7",
-  dustyRed: "#AD6A6C",
-  deepPlum: "#5D2E46",
-  lavender: "#B58DB6",
+  bgPrimary: "#0F172A",
+  bgSecondary: "#1E293B",
+  accent: "#10B981",
+  textMain: "#F8FAFC",
+  textMuted: "#94A3B8",
 };
 
 const Contact = () => {
   return (
     <section
       id="contact"
-      className="py-16"
-      style={{ backgroundColor: colors.cream, color: colors.deepPlum }}
+      className="py-24"
+      style={{ backgroundColor: colors.bgPrimary }}
     >
       <div className="max-w-6xl mx-auto px-6">
-        <h2
-          className="text-4xl font-bold text-center mb-12"
-          style={{ fontFamily: "'Mozilla Headline', sans-serif" }}
+        {/* Title */}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
         >
-          Contact Me
-        </h2>
+          <h2
+            className="text-4xl md:text-5xl font-extrabold mb-4"
+            style={{ color: colors.textMain }}
+          >
+            Get in <span style={{ color: colors.accent }}>Touch</span>
+          </h2>
+          <p className="text-lg" style={{ color: colors.textMuted }}>
+            Have a project, idea, or just want to say hi?  
+            I’m always open to meaningful conversations.
+          </p>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-14">
           {/* Contact Info */}
-          <div
-            className="space-y-6"
-            style={{ fontFamily: "'Urbanist', sans-serif" }}
+          <motion.div
+            className="space-y-8"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
           >
             <h3
-              className="text-2xl font-semibold mb-6"
-              style={{ color: colors.dustyRed }}
+              className="text-2xl font-semibold"
+              style={{ color: colors.textMain }}
             >
-              Get in Touch
+              Contact Information
             </h3>
-            <ul className="space-y-5">
-              <li className="flex items-center space-x-4">
-                <FaPhoneAlt size={22} color={colors.dustyRed} />
-                <span className="text-lg">{"+880 1234 567 890"}</span>
+
+            <ul className="space-y-6 text-lg">
+              <li className="flex items-center gap-4">
+                <FaPhoneAlt color={colors.accent} />
+                <span style={{ color: colors.textMuted }}>
+                  +880 1234 567 890
+                </span>
               </li>
-              <li className="flex items-center space-x-4">
-                <FaEnvelope size={22} color={colors.dustyRed} />
-                <span className="text-lg">jamimaafroz123@gmail.com</span>
+
+              <li className="flex items-center gap-4">
+                <FaEnvelope color={colors.accent} />
+                <span style={{ color: colors.textMuted }}>
+                  jamimaafroz123@gmail.com
+                </span>
               </li>
-              <li className="flex items-center space-x-4">
-                <FaWhatsapp size={22} color="#25D366" />
+
+              <li className="flex items-center gap-4">
+                <FaWhatsapp color="#25D366" />
                 <a
                   href="https://wa.me/8801234567890"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-lg underline hover:text-dustyRed transition-colors"
-                  style={{ color: colors.deepPlum }}
+                  className="underline underline-offset-4 transition-colors"
+                  style={{ color: colors.textMuted }}
                 >
                   Chat on WhatsApp
                 </a>
               </li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Contact Form */}
-          <div
-            style={{ fontFamily: "'Urbanist', sans-serif" }}
-            className="bg-white rounded-xl shadow-lg p-8"
+          <motion.div
+            className="p-8 rounded-xl border"
+            style={{
+              backgroundColor: colors.bgSecondary,
+              borderColor: `${colors.textMuted}20`,
+            }}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
           >
             <h3
               className="text-2xl font-semibold mb-6"
-              style={{ color: colors.dustyRed }}
+              style={{ color: colors.textMain }}
             >
-              Send Me a Message
+              Send a Message
             </h3>
+
             <form className="space-y-5">
               <input
                 type="text"
                 placeholder="Your Name"
-                className="w-full p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2"
-                style={{ borderColor: colors.softRose }}
+                className="w-full p-4 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
+                style={{
+                  borderColor: `${colors.textMuted}40`,
+                  color: colors.textMain,
+                }}
               />
+
               <input
                 type="email"
                 placeholder="Your Email"
-                className="w-full p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2"
-                style={{ borderColor: colors.softRose }}
+                className="w-full p-4 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
+                style={{
+                  borderColor: `${colors.textMuted}40`,
+                  color: colors.textMain,
+                }}
               />
+
               <textarea
-                placeholder="Your Message"
                 rows="5"
-                className="w-full p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 resize-none"
-                style={{ borderColor: colors.softRose }}
-              ></textarea>
+                placeholder="Your Message"
+                className="w-full p-4 rounded-lg bg-transparent border resize-none focus:outline-none focus:ring-2"
+                style={{
+                  borderColor: `${colors.textMuted}40`,
+                  color: colors.textMain,
+                }}
+              />
+
               <button
                 type="submit"
-                className="w-full py-3 rounded-lg font-semibold transition-colors"
+                className="w-full py-3 rounded-lg font-semibold transition-all hover:scale-[1.02]"
                 style={{
-                  backgroundColor: colors.dustyRed,
-                  color: colors.cream,
+                  backgroundColor: colors.accent,
+                  color: colors.bgPrimary,
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = colors.softRose)
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = colors.dustyRed)
-                }
               >
-                Send Message
+                Send Message →
               </button>
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

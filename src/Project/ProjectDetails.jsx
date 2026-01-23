@@ -1,18 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useParams } from "react-router";
 
 const colors = {
-  cream: "#E8D6CB",
-  softRose: "#D0ADA7",
-  dustyRed: "#AD6A6C",
-  deepPlum: "#5D2E46",
-  lavender: "#B58DB6",
+  bgPrimary: "#0F172A",
+  bgSecondary: "#1E293B",
+  accent: "#10B981",
+  textMain: "#F8FAFC",
+  textMuted: "#94A3B8",
 };
+
+const Loader = () => (
+  <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+    <motion.div
+      className="w-14 h-14 rounded-full border-4"
+      style={{
+        borderColor: colors.textMuted,
+        borderTopColor: colors.accent,
+      }}
+      animate={{ rotate: 360 }}
+      transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+    />
+    <motion.p
+      className="text-lg font-semibold"
+      style={{ color: colors.textMuted }}
+      animate={{ opacity: [0.4, 1, 0.4] }}
+      transition={{ repeat: Infinity, duration: 1.5 }}
+    >
+      Loading project details…
+    </motion.p>
+  </div>
+);
 
 const ProjectDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -20,155 +41,114 @@ const ProjectDetails = () => {
     fetch("/Project.json")
       .then((res) => res.json())
       .then((data) => {
-        const foundProject = data.find((p) => p.id === parseInt(id));
-        setProject(foundProject || null);
+        const found = data.find((p) => p.id === parseInt(id));
+        setProject(found || null);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error("Failed to load project details:", error);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, [id]);
 
-  if (loading) {
-    return (
-      <p
-        className="text-center mt-10 font-mozilla"
-        style={{
-          color: colors.deepPlum,
-          fontWeight: "600",
-          fontSize: "1.2rem",
-        }}
-      >
-        Loading project details...
-      </p>
-    );
-  }
+  if (loading) return <Loader />;
 
   const details = project.detailsPage;
 
   return (
-    <motion.div
-      className="max-w-4xl mx-auto p-8 rounded-xl shadow-2xl font-mozilla"
-      style={{ backgroundColor: colors.cream, color: colors.deepPlum }}
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: "easeOut" }}
+    <motion.main
+      className="min-h-screen px-6 md:px-16 py-12 font-mozilla"
+      style={{ backgroundColor: colors.bgPrimary, color: colors.textMain }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
     >
+      {/* Title */}
       <h1
-        className="text-4xl font-extrabold mb-8 tracking-tight"
-        style={{ color: colors.dustyRed }}
+        className="text-4xl md:text-5xl font-extrabold mb-6"
+        style={{ color: colors.accent }}
       >
         {project.projectName}
       </h1>
+
+      {/* Image */}
       <motion.img
         src={project.projectImage}
         alt={project.projectName}
-        className="w-full h-72 md:h-96 object-cover rounded-xl mb-8 shadow-lg"
-        style={{ border: `5px solid ${colors.lavender}` }}
+        className="w-full max-h-[460px] object-cover rounded-lg mb-12"
         initial={{ scale: 0.97 }}
         animate={{ scale: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.4 }}
       />
 
-      <section className="mb-8">
-        <h3
-          className="text-2xl font-semibold mb-3 tracking-wide"
-          style={{ color: colors.softRose }}
-        >
-          Main Technology Stack Used:
-        </h3>
-        <ul className="list-disc list-inside space-y-1 text-lg">
-          {details.mainTechStack.map((tech, idx) => (
-            <li key={idx}>{tech}</li>
-          ))}
-        </ul>
-      </section>
+      {/* Content */}
+      <div className="space-y-10 max-w-5xl">
+        <section>
+          <h3 className="text-2xl font-semibold mb-3 text-emerald-400">
+            Tech Stack
+          </h3>
+          <p className="text-lg" style={{ color: colors.textMuted }}>
+            {details.mainTechStack.join(", ")}
+          </p>
+        </section>
 
-      <section className="mb-8">
-        <h3
-          className="text-2xl font-semibold mb-3 tracking-wide"
-          style={{ color: colors.softRose }}
-        >
-          Brief Description:
-        </h3>
-        <p className="text-lg leading-relaxed">{details.briefDescription}</p>
-      </section>
+        <section>
+          <h3 className="text-2xl font-semibold mb-3 text-emerald-400">
+            Description
+          </h3>
+          <p className="text-lg leading-relaxed" style={{ color: colors.textMuted }}>
+            {details.briefDescription}
+          </p>
+        </section>
 
-      <section className="mb-8">
-        <h3
-          className="text-2xl font-semibold mb-3 tracking-wide"
-          style={{ color: colors.softRose }}
-        >
-          Live Project Link:
-        </h3>
-        <a
-          href={details.liveProjectLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline text-xl font-medium block"
-          style={{ color: colors.dustyRed }}
-        >
-          {details.liveProjectLink}
-        </a>
-      </section>
+        <section>
+          <h3 className="text-2xl font-semibold mb-3 text-emerald-400">
+            Challenges
+          </h3>
+          <p className="text-lg leading-relaxed" style={{ color: colors.textMuted }}>
+            {details.challengesFaced}
+          </p>
+        </section>
 
-      <section className="mb-8">
-        <h3
-          className="text-2xl font-semibold mb-3 tracking-wide"
-          style={{ color: colors.softRose }}
-        >
-          GitHub Repository Link (Client):
-        </h3>
-        <a
-          href={details.githubRepoClient}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline text-xl font-medium block"
-          style={{ color: colors.dustyRed }}
-        >
-          {details.githubRepoClient}
-        </a>
-      </section>
+        <section>
+          <h3 className="text-2xl font-semibold mb-3 text-emerald-400">
+            Future Plans
+          </h3>
+          <p className="text-lg leading-relaxed" style={{ color: colors.textMuted }}>
+            {details.potentialImprovements}
+          </p>
+        </section>
 
-      <section className="mb-8">
-        <h3
-          className="text-2xl font-semibold mb-3 tracking-wide"
-          style={{ color: colors.softRose }}
-        >
-          Challenges Faced While Developing:
-        </h3>
-        <p className="text-lg leading-relaxed">{details.challengesFaced}</p>
-      </section>
+        {/* Links */}
+        <div className="flex flex-wrap gap-6 pt-6">
+          <a
+            href={details.liveProjectLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold underline underline-offset-4"
+            style={{ color: colors.accent }}
+          >
+            🌐 Live Project
+          </a>
 
-      <section className="mb-10">
-        <h3
-          className="text-2xl font-semibold mb-3 tracking-wide"
-          style={{ color: colors.softRose }}
-        >
-          Potential Improvements and Future Plans:
-        </h3>
-        <p className="text-lg leading-relaxed">
-          {details.potentialImprovements}
-        </p>
-      </section>
+          <a
+            href={details.githubRepoClient}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold underline underline-offset-4"
+            style={{ color: colors.textMain }}
+          >
+            💻 GitHub Repository
+          </a>
+        </div>
 
-      <Link
-        to="/projects"
-        className="inline-block mt-4 px-6 py-3 rounded-lg font-semibold tracking-wide shadow-md transition-colors duration-300"
-        style={{ backgroundColor: colors.dustyRed, color: colors.cream }}
-        onMouseEnter={(e) => {
-          e.target.style.backgroundColor = colors.lavender;
-          e.target.style.color = colors.deepPlum;
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.backgroundColor = colors.dustyRed;
-          e.target.style.color = colors.cream;
-        }}
-      >
-        ← Back to Projects
-      </Link>
-    </motion.div>
+        {/* Back */}
+        <Link
+          to="/projects"
+          className="inline-block pt-10 font-semibold"
+          style={{ color: colors.textMuted }}
+        >
+          ← Back to Projects
+        </Link>
+      </div>
+    </motion.main>
   );
 };
 
